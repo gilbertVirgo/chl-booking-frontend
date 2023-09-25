@@ -1,7 +1,8 @@
 import { Redirect, Route, Switch } from "react-router-dom";
 
 import Booking from "./pages/Booking";
-import Bookings from "./pages/Bookings";
+import Bookings from "./pages/Bookings/Cards";
+import Calendar from "./pages/Bookings/Calendar";
 import Customer from "./pages/Customer";
 import Customers from "./pages/Customers";
 import GlobalContext from "./GlobalContext";
@@ -9,12 +10,16 @@ import Login from "./pages/Login";
 import Modal from "./components/Modal";
 import NavBar from "./components/NavBar";
 import React from "react";
+import Timeline from "./pages/Bookings/Timeline";
+import dayjs from "dayjs";
 
 const App = () => {
 	const [error, setError] = React.useState();
 	const [highlight, setHighlight] = React.useState();
 	const [loading, setLoading] = React.useState(false);
 	const [confirm, setConfirm] = React.useState({});
+
+	const today = dayjs();
 
 	return (
 		<React.Fragment>
@@ -28,6 +33,7 @@ const App = () => {
 			{/* Routing */}
 			<GlobalContext.Provider
 				value={{
+					loading,
 					setError,
 					setHighlight,
 					setLoading,
@@ -35,12 +41,22 @@ const App = () => {
 				}}
 			>
 				<Switch>
-					<Route path="/bookings" component={Bookings} />
+					<Route path="/bookings/cards" component={Bookings} />
+					<Route path="/bookings/timeline" component={Timeline} />
+					<Redirect
+						exact
+						path="/bookings/calendar"
+						to={`/bookings/calendar/${today.year()}/${today.month()}`}
+					/>
+					<Route
+						path="/bookings/calendar/:year/:month"
+						component={Calendar}
+					/>
 					<Route path="/booking/:index" component={Booking} />
 					<Route path="/customers" component={Customers} />
 					<Route path="/customer/:index" component={Customer} />
 					<Route path="/login" component={Login} />
-					<Redirect to="/bookings" />
+					<Redirect to="/bookings/cards" />
 				</Switch>
 			</GlobalContext.Provider>
 		</React.Fragment>
