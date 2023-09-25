@@ -1,13 +1,14 @@
 import { Link, useHistory } from "react-router-dom";
 
-import BookingCard from "../../components/BookingCard";
+import BookingCard from "../../../components/BookingCard";
 import Container from "react-bootstrap/Container";
-import GlobalContext from "../../GlobalContext";
-import Grid from "../../components/Grid";
+import GlobalContext from "../../../GlobalContext";
+import Grid from "../../../components/Grid";
+import PageTitle from "../../../components/PageTitle";
 import React from "react";
 import Stack from "react-bootstrap/Stack";
-import get from "../../api/get";
-import theme from "../../theme";
+import get from "../../../api/get";
+import theme from "../../../theme";
 
 export default () => {
 	const history = useHistory(),
@@ -34,19 +35,18 @@ export default () => {
 	return (
 		!!bookings.length && (
 			<Container>
+				<PageTitle>Bookings | Cards</PageTitle>
 				<Stack gap={5}>
-					<section>
-						<h2>Bookings</h2>
-						<Grid>
-							{bookings.map((booking, k) => (
-								<BookingCard
-									key={k}
-									booking={booking}
-									onChange={reload}
-								/>
-							))}
-						</Grid>
-					</section>
+					<Grid>
+						{bookings.map((booking, k) => (
+							<BookingCard
+								key={k}
+								booking={booking}
+								onChange={reload}
+							/>
+						))}
+					</Grid>
+
 					{nextPage && (
 						<section
 							style={{

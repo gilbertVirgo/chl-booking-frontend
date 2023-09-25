@@ -31,8 +31,6 @@ export default ({ customerIndex, multiple, onChange }) => {
 	const { setError, setLoading } = React.useContext(GlobalContext);
 
 	const handleChange = async ({ target: { files } }) => {
-		console.log({ files });
-
 		const formData = new FormData();
 
 		for (const file of files) {

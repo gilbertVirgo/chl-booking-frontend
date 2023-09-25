@@ -1,5 +1,3 @@
-import readableDate from "../helpers/readableDate";
-
 export default (booking, customer) => `
     To ${customer.firstname} ... %0A%0A
 

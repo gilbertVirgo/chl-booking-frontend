@@ -10,11 +10,11 @@ export default styled.div`
         grid-template-columns: 1fr;
     `}
 
-	${media.minWidth("m")`
+	${media.minWidth("l")`
         grid-template-columns: 1fr 1fr;
     `}
 
-    ${media.minWidth("l")`
+    ${media.minWidth("xl")`
         grid-template-columns: 1fr 1fr 1fr;
     `}
 `;

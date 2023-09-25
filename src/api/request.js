@@ -21,8 +21,6 @@ export default async (
 		requestProps.headers.authorization = "Bearer " + jwt;
 	}
 
-	console.log({ requestProps });
-
 	const { success, ...json } = await (
 		await fetch(API_ROOT + route, requestProps)
 	).json();

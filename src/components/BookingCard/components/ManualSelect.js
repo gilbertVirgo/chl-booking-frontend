@@ -1,11 +1,3 @@
-import {
-	faCheckCircle,
-	faEnvelope,
-	faEnvelopeOpen,
-	faMinusCircle,
-	faXmarkCircle,
-} from "@fortawesome/free-solid-svg-icons";
-
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
@@ -13,8 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import GlobalContext from "../../../GlobalContext";
 import React from "react";
 import patch from "../../../api/patch";
+import statusMap from "../../../status-map";
 import styled from "styled-components";
 import theme from "../../../theme";
+import { useHistory } from "react-router-dom";
 
 const DropdownItem = styled(Dropdown.Item)`
 	.icon-wrapper {
@@ -24,41 +18,23 @@ const DropdownItem = styled(Dropdown.Item)`
 	}
 `;
 
-const status = {
-	unconfirmed: {
-		icon: faEnvelope,
-		title: "Unconfirmed",
-	},
-	engaging: {
-		icon: faEnvelopeOpen,
-		title: "Currently engaging",
-	},
-	confirmed: {
-		icon: faCheckCircle,
-		title: "Confirmed",
-	},
-	rejected: {
-		icon: faXmarkCircle,
-		title: "Rejected",
-	},
-	redundant: {
-		icon: faMinusCircle,
-		title: "Redundant",
-	},
-};
-
-export default ({ booking, onChange }) => {
+export default ({ booking, confirmFor, onChange }) => {
 	const { setError } = React.useContext(GlobalContext);
 
-	const handleChangeBookingStatus = (status) =>
-		patch(`/booking/${booking.index}`, { status })
+	const handleChangeBookingStatus = (status) => {
+		const patchBody = { status };
+
+		if (status === "confirmed") patchBody.confirmed_date = confirmFor;
+
+		patch(`/booking/${booking.index}`, patchBody)
 			.then(onChange)
 			.catch(({ message }) => setError(message));
+	};
 
 	return (
 		<DropdownButton
 			as={ButtonGroup}
-			title="Mark as"
+			title={statusMap[booking.status].title}
 			size="sm"
 			variant="outline-secondary"
 			style={{
@@ -67,12 +43,12 @@ export default ({ booking, onChange }) => {
 				top: `${theme.gutter}px`,
 			}}
 		>
-			{Object.entries(status).map(([key, { icon, title }]) => (
+			{Object.entries(statusMap).map(([key, { icon, title, color }]) => (
 				<DropdownItem
 					onClick={handleChangeBookingStatus.bind(null, key)}
 				>
 					<div class="icon-wrapper">
-						<FontAwesomeIcon icon={icon} />
+						<FontAwesomeIcon icon={icon} style={{ color }} />
 					</div>{" "}
 					{title}
 				</DropdownItem>

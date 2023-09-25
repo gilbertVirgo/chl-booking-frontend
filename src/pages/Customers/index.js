@@ -1,6 +1,7 @@
 import Container from "react-bootstrap/Container";
 import CustomerRow from "./components/CustomerRow";
 import GlobalContext from "../../GlobalContext";
+import PageTitle from "../../components/PageTitle";
 import React from "react";
 import SearchBar from "../../components/SearchBar";
 import Stack from "react-bootstrap/Stack";
@@ -27,6 +28,7 @@ export default () => {
 	return (
 		!!customers.length && (
 			<Container>
+				<PageTitle>Customers</PageTitle>
 				<Stack gap={2}>
 					<SearchBar
 						value={searchValue}

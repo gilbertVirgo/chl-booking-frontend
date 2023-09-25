@@ -1,103 +1,69 @@
-import {
-	faCalendar,
-	faComment,
-	faUser,
-	faWarning,
-} from "@fortawesome/free-solid-svg-icons";
-
-import Buttons from "./components/Buttons";
+import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { CardBody } from "../../pages/Bookings/styles";
+import { CardBody } from "../../pages/Bookings/Cards/styles";
+import DetailsTable from "./components/DetailsTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import GlobalContext from "../../GlobalContext";
-import LinesEllipsis from "react-lines-ellipsis";
-import { Link } from "react-router-dom";
 import ManualSelect from "./components/ManualSelect";
 import React from "react";
 import Subtext from "../Subtext";
+import ToDoTable from "./components/ToDoTable";
+import { faArchive } from "@fortawesome/free-solid-svg-icons";
 import parseDate from "../../helpers/parseDate";
-import theme from "../../theme";
+import patch from "../../api/patch";
 import timeAgo from "../../time-ago";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-export default ({ onChange, booking }) => {
-	const {
-		archived,
-		date,
-		customer: customer_index,
-		customer_name,
-		created_at,
-		group_size,
-		comments_or_questions,
-		status,
-	} = booking;
+export default ({ onChange, confirmFor, booking, onHide, ...p }) => {
+	const history = useHistory(),
+		reload = () => history.go(0);
 
-	const { setHighlight } = React.useContext(GlobalContext);
+	const { index, archived, created_at, status } = booking;
+
+	const { setHighlight, setConfirm, setError } =
+		React.useContext(GlobalContext);
+
+	const handleArchive = () => {
+		if (onHide) onHide();
+
+		setConfirm({
+			prompt: "Are you sure you want to archive this booking? (This will hide this booking card from view, but you'll still be able to see it from within the customer's booking history.)",
+			dangerous: true,
+			confirmButtonText: "Yes",
+			onConfirm: patch
+				.bind(null, `/booking/${index}`, { archived: true })
+				.then(reload)
+				.catch(setError),
+		});
+	};
 
 	return (
-		<React.Fragment>
-			<Card bg={status === "unconfirmed" && "warning"}>
-				<CardBody style={{ position: "relative" }}>
-					<ManualSelect {...{ booking, onChange }} />
-					<table>
-						<thead>
-							<tr>
-								<td colSpan={2}>
-									<h5>Group of {group_size}</h5>
-								</td>
-							</tr>
-						</thead>
-						<tbody>
-							{[
-								[
-									faUser,
-									<Link to={`/customer/${customer_index}`}>
-										{customer_name}
-									</Link>,
-								],
-								[faCalendar, date],
-								[
-									faComment,
-									comments_or_questions && (
-										<LinesEllipsis
-											style={{ cursor: "pointer" }}
-											onClick={setHighlight.bind(
-												null,
-												comments_or_questions
-											)}
-											text={comments_or_questions}
-											maxLine={3}
-											ellipsis="..."
-											trimRight
-											basedOn="letters"
-										/>
-									),
-								],
-							].map(
-								([icon, text], k) =>
-									text && (
-										<tr key={k}>
-											<td>
-												<FontAwesomeIcon icon={icon} />
-											</td>
-											<td>{text}</td>
-										</tr>
-									)
-							)}
-						</tbody>
-					</table>
-				</CardBody>
-				<Card.Footer style={{ display: "flex" }}>
-					<Subtext style={{ flex: 1 }}>
-						Requested {timeAgo.format(parseDate(created_at))}
-					</Subtext>
+		<Card bg={status === "unconfirmed" && "warning"} {...p}>
+			<CardBody style={{ position: "relative" }}>
+				<ManualSelect {...{ booking, onChange, confirmFor }} />
+				<DetailsTable {...booking} />
+				{status === "confirmed" && (
+					<ToDoTable {...{ booking, onChange }} />
+				)}
+			</CardBody>
+			<Card.Footer style={{ display: "flex" }}>
+				<Subtext style={{ flex: 1 }}>
+					Requested {timeAgo.format(parseDate(created_at))}
+				</Subtext>
 
-					{archived ? (
-						<Subtext>(Archived)</Subtext>
-					) : (
-						<Buttons {...{ booking, onChange }} />
-					)}
-				</Card.Footer>
-			</Card>
-		</React.Fragment>
+				{archived ? (
+					<Subtext>(Archived)</Subtext>
+				) : (
+					<Button
+						variant="secondary"
+						onClick={handleArchive}
+						style={{ marginLeft: "5px" }}
+						size="sm"
+					>
+						<FontAwesomeIcon icon={faArchive} />
+					</Button>
+				)}
+			</Card.Footer>
+		</Card>
 	);
 };

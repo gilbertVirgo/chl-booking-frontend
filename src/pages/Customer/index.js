@@ -117,6 +117,7 @@ export default () => {
 							{customer.images &&
 								customer.images
 									.split(",")
+									.filter((v) => !!v) // Eliminates empty image items
 									.map((src) => (
 										<ImageCard
 											src={src}
@@ -144,6 +145,7 @@ export default () => {
 						style={{
 							display: "flex",
 							justifyContent: "flex-end",
+							marginBottom: "30px",
 						}}
 					>
 						<Button disabled={!isDirty} onClick={handleSave}>
