@@ -120,7 +120,7 @@ export default () => {
 						</Button>
 					}
 				>
-					Bookings | Calendar
+					Calendar
 				</PageTitle>
 				<Hero>
 					<PrevButton

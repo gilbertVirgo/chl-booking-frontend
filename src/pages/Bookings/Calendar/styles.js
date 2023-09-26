@@ -11,6 +11,7 @@ export const Wrapper = styled.div`
 
 export const Hero = styled.div`
 	display: grid;
+	grid-template-columns: repeat(7, 1fr);
 	grid-template-areas:
 		"prev-button . month-title month-title month-title . next-button"
 		". . . . . . .";
@@ -27,7 +28,7 @@ export const PrevButton = styled(Button).attrs({ variant: "light" })`
 `;
 export const NextButton = styled(Button).attrs({ variant: "light" })`
 	grid-area: next-button;
-	margin-left: auto;
+	justify-self: flex-end;
 	max-width: fit-content;
 `;
 export const MonthTitle = styled.h4`

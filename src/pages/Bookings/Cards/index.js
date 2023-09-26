@@ -35,7 +35,7 @@ export default () => {
 	return (
 		!!bookings.length && (
 			<Container>
-				<PageTitle>Bookings | Cards</PageTitle>
+				<PageTitle>Cards</PageTitle>
 				<Stack gap={5}>
 					<Grid>
 						{bookings.map((booking, k) => (

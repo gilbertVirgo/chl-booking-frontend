@@ -20,8 +20,7 @@ export default ({ onChange, confirmFor, booking, onHide, ...p }) => {
 
 	const { index, archived, created_at, status } = booking;
 
-	const { setHighlight, setConfirm, setError } =
-		React.useContext(GlobalContext);
+	const { setConfirm, setError } = React.useContext(GlobalContext);
 
 	const handleArchive = () => {
 		if (onHide) onHide();
@@ -30,10 +29,10 @@ export default ({ onChange, confirmFor, booking, onHide, ...p }) => {
 			prompt: "Are you sure you want to archive this booking? (This will hide this booking card from view, but you'll still be able to see it from within the customer's booking history.)",
 			dangerous: true,
 			confirmButtonText: "Yes",
-			onConfirm: patch
-				.bind(null, `/booking/${index}`, { archived: true })
-				.then(reload)
-				.catch(setError),
+			onConfirm: () =>
+				patch(`/booking/${index}`, { archived: true })
+					.then(reload)
+					.catch(setError),
 		});
 	};
 
