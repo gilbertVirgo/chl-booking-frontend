@@ -88,14 +88,26 @@ export default () => {
 						<h4>Contact details</h4>
 						<Table striped bordered>
 							<tbody>
-								{["email", "phone"].map((key) => (
-									<tr>
-										<td>
-											<strong>{key}</strong>
-										</td>
-										<td>{customer[key]}</td>
-									</tr>
-								))}
+								<tr>
+									<td>
+										<strong>Email</strong>
+									</td>
+									<td>
+										<a href={`mailto:${customer.email}`}>
+											{customer.email}
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<strong>Phone</strong>
+									</td>
+									<td>
+										<a href={`tel:${customer.phone}`}>
+											{customer.phone}
+										</a>
+									</td>
+								</tr>
 							</tbody>
 						</Table>
 					</section>
