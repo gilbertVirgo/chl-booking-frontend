@@ -13,7 +13,7 @@ import parsePotentialDates from "../../../helpers/parsePotentialDates";
 
 export default ({
 	group_size,
-	customer_index,
+	customer,
 	customer_name,
 	potential_dates,
 	comments_or_questions,
@@ -34,7 +34,7 @@ export default ({
 				{[
 					[
 						faUser,
-						<Link to={`/customer/${customer_index}`}>
+						<Link to={`/customer/${customer}`}>
 							{customer_name}
 						</Link>,
 					],
