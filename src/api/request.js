@@ -1,4 +1,4 @@
-const API_ROOT = "https://cms.christianheritagelondon.org";
+const API_ROOT = "https://api.christianheritagelondon.org";
 // const API_ROOT = "http://localhost:4000";
 
 export default async (
